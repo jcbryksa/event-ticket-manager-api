@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model events {
+  id             String         @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  startAt        DateTime       @map("start_at") @db.DateTime(0)
+  status         eventsStatus?
+  createdAt      DateTime       @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt      DateTime?      @map("updated_at") @db.DateTime(0)
+  presentationId String?        @map("presentation_id") @db.VarChar(255)
+  presentations  presentations? @relation(fields: [presentationId], references: [id], onUpdate: Restrict, map: "events_presentation_id_foreign")
+  tickets        tickets[]
+
+  @@index([presentationId], map: "events_presentation_id_foreign")
+}
+
+model locationSections {
+  id                       String                     @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  locationId               String                     @map("location_id") @db.Char(36)
+  name                     String                     @db.VarChar(512)
+  indexPrefix              String?                    @map("index_prefix") @db.VarChar(128)
+  indexFrom                Int?                       @map("index_from")
+  indexTo                  Int?                       @map("index_to")
+  capability               Int                        @default(1)
+  sort                     Int                        @default(1)
+  createdAt                DateTime                   @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt                DateTime?                  @map("updated_at") @db.DateTime(0)
+  presentationSectionItems presentationSectionItems[]
+
+  @@unique([locationId, name], map: "location_sections_location_id_IDX")
+  @@map("location_sections")
+}
+
+model locations {
+  id            String          @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name          String          @unique(map: "name") @db.VarChar(512)
+  createdAt     DateTime        @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt     DateTime?       @map("updated_at") @db.DateTime(0)
+  presentations presentations[]
+}
+
+model presentationSectionItems {
+  id                    String               @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  presentationSectionId String               @map("presentation_section_id") @db.Char(36)
+  locationSectionId     String               @map("location_section_id") @db.Char(36)
+  sort                  Int                  @default(1)
+  createdAt             DateTime             @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt             DateTime?            @map("updated_at") @db.DateTime(0)
+  presentationSections  presentationSections @relation(fields: [presentationSectionId], references: [id], onUpdate: Restrict, map: "presentation_section_items_ibfk_1")
+  locationSections      locationSections     @relation(fields: [locationSectionId], references: [id], onUpdate: Restrict, map: "presentation_section_items_ibfk_2")
+  ticketItems           ticketItems[]
+
+  @@unique([presentationSectionId, locationSectionId], map: "presentation_section_items_presentation_section_id_IDX")
+  @@index([locationSectionId], map: "location_section_id")
+  @@map("presentation_section_items")
+}
+
+model presentationSections {
+  id                       String                     @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  presentationId           String                     @map("presentation_id") @db.Char(36)
+  name                     String                     @db.VarChar(512)
+  price                    Float                      @db.Float
+  sort                     Int                        @default(1)
+  createdAt                DateTime                   @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt                DateTime?                  @map("updated_at") @db.DateTime(0)
+  presentationSectionItems presentationSectionItems[]
+  presentations            presentations              @relation(fields: [presentationId], references: [id], onUpdate: Restrict, map: "presentation_sections_ibfk_1")
+
+  @@unique([presentationId, name], map: "presentation_sections_presentation_id_IDX")
+  @@map("presentation_sections")
+}
+
+model presentations {
+  id                   String                 @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  locationId           String                 @map("location_id") @db.Char(36)
+  title                String                 @db.VarChar(512)
+  description          String?                @db.Text
+  performerName        String                 @map("performer_name") @db.VarChar(512)
+  createdAt            DateTime               @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt            DateTime?              @map("updated_at") @db.DateTime(0)
+  events               events[]
+  presentationSections presentationSections[]
+  locations            locations              @relation(fields: [locationId], references: [id], onUpdate: Restrict, map: "presentations_ibfk_1")
+
+  @@index([locationId], map: "location_id")
+}
+
+model ticketItems {
+  id                        String                   @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  ticketId                  String                   @map("ticket_id") @db.Char(36)
+  presentationSectionItemId String                   @map("presentation_section_item_id") @db.Char(36)
+  paymentAmount             Float                    @map("payment_amount") @db.Float
+  sort                      Int                      @default(1)
+  createdAt                 DateTime                 @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt                 DateTime?                @map("updated_at") @db.DateTime(0)
+  locationSectionIndex      Int?                     @map("location_section_index")
+  tickets                   tickets                  @relation(fields: [ticketId], references: [id], onUpdate: Restrict, map: "ticket_items_ibfk_1")
+  presentationSectionItems  presentationSectionItems @relation(fields: [presentationSectionItemId], references: [id], onUpdate: Restrict, map: "ticket_items_ibfk_2")
+
+  @@unique([ticketId, presentationSectionItemId], map: "ticket_items_ticket_id_IDX")
+  @@index([presentationSectionItemId], map: "presentation_section_item_id")
+  @@map("ticket_items")
+}
+
+model tickets {
+  id            String        @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  eventId       String        @map("event_id") @db.Char(36)
+  customerDni   Int           @unique(map: "customer_dni") @map("customer_dni")
+  customerName  String        @map("customer_name") @db.VarChar(512)
+  soldOn        DateTime      @default(now()) @map("sold_on") @db.DateTime(0)
+  paymentAmount Float         @map("payment_amount") @db.Float
+  createdAt     DateTime      @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt     DateTime?     @map("updated_at") @db.DateTime(0)
+  ticketItems   ticketItems[]
+  events        events        @relation(fields: [eventId], references: [id], onUpdate: Restrict, map: "tickets_ibfk_1")
+
+  @@index([eventId], map: "event_id")
+}
+
+model cacheEntries {
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  code       String?   @unique(map: "cache_entries_code_unique") @db.VarChar(10)
+  lastUpdate DateTime? @map("last_update") @db.DateTime(0)
+
+  @@index([code], map: "cache_entries_code_index")
+  @@map("cache_entries")
+}
+
+enum eventsStatus {
+  pending
+  active
+  sold
+
+  @@map("events_status")
+}
