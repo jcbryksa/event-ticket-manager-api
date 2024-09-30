@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "6220be54-b649-4f23-aae8-3bdeef1f9b27",
+		"name": "Event Ticket Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6329870"
+	},
+	"item": [
+		{
+			"name": "cache",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{url_base}}/cache",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"cache"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "events",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_base}}/events?page=1&limit=50&orderBy=startDateTime asc",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"events"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "50"
+						},
+						{
+							"key": "presentationTitle",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "performerName",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "locationName",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "dateFrom",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "dateTo",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "priceFrom",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "priceTo",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "orderBy",
+							"value": "startDateTime asc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "events/{eventId}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_base}}/events/:eventId",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"events",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "eventId",
+							"value": "cc4eab38-7b71-11ef-a6d5-0242ac110002"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tickets",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"eventId\": \"cc4eab38-7b71-11ef-a6d5-0242ac110002\",\r\n  \"customerDni\": 22333444,\r\n  \"customerName\": \"Rocky Verbin\",\r\n  \"ticketItems\": [\r\n    {\r\n      \"presentationSectionId\": \"50ba36f9-733b-11ef-8105-0242ac110002\",\r\n      \"presentationSectionItemId\": \"576976eb-7c1a-11ef-a6d5-0242ac110002\",\r\n      \"locationSectionIndex\": 10\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_base}}/tickets",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"tickets"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
