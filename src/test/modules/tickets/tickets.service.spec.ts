@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { TicketsService } from './tickets.service'
-import { PrismaService } from '../../support/prisma/prisma.service'
-import { EventsModule } from '../events/events.module'
-import { PrismaModule } from '../../support/prisma/prisma.module'
-import { LocationsModule } from '../locations/locations.module'
-import { RedisModule } from '../../support/redis/redis.module'
+import { TicketsService } from '../../../modules/tickets/tickets.service'
+import { PrismaService } from '../../../support/prisma/prisma.service'
+import { EventsModule } from '../../../modules/events/events.module'
+import { PrismaModule } from '../../../support/prisma/prisma.module'
+import { LocationsModule } from '../../../modules/locations/locations.module'
+import { RedisModule } from '../../../support/redis/redis.module'
 
 describe('TicketsService', () => {
   let service: TicketsService

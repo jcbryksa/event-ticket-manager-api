@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { AppService } from './app.service'
-import { PrismaModule } from '../support/prisma/prisma.module'
-import { RedisModule } from '../support/redis/redis.module'
-import { EventsModule } from '../modules/events/events.module'
-import { PresentationsModule } from '../modules/presentations/presentations.module'
-import { LocationsModule } from '../modules/locations/locations.module'
+import { AppService } from '../../app/app.service'
+import { PrismaModule } from '../../support/prisma/prisma.module'
+import { RedisModule } from '../../support/redis/redis.module'
+import { EventsModule } from '../../modules/events/events.module'
+import { PresentationsModule } from '../../modules/presentations/presentations.module'
+import { LocationsModule } from '../../modules/locations/locations.module'
 
 describe('AppService', () => {
   let service: AppService

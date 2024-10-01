@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { PresentationsService } from './presentations.service'
-import { PrismaModule } from '../../support/prisma/prisma.module'
-import { RedisModule } from '../../support/redis/redis.module'
+import { PresentationsService } from '../../../modules/presentations/presentations.service'
+import { PrismaModule } from '../../../support/prisma/prisma.module'
+import { RedisModule } from '../../../support/redis/redis.module'
 
 describe('PresentationsService', () => {
   let service: PresentationsService
