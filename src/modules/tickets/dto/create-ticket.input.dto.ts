@@ -1,4 +1,5 @@
 import {
+  ArrayMinSize,
   IsArray,
   IsNumber,
   IsOptional,
@@ -53,5 +54,6 @@ export class CreateTicketInputDto {
 
   @ApiProperty({ type: [TicketItem], required: true })
   @IsArray()
+  @ArrayMinSize(1)
   readonly ticketItems: TicketItem[]
 }
